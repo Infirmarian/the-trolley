@@ -54,13 +54,14 @@ public class GameController : MonoBehaviour {
         } else {
             int x = Mathf.RoundToInt(Input.GetAxis("Horizontal"));
             if(x == 0) {
-                // No Player Input
-            } else {
                 // split tracks
-                if(nextTrack[1] == 0) {
-                    int rand = (Random.Range(0, 2) * 2) - 1;
-                    MoveTrolleyToPosition(new Vector3(initTrolleyPos.x + rand, initTrolleyPos.y, initTrolleyPos.z));
+                if (nextTrack[1] == 0) {
+                    int xpos = Random.Range(0, 2) * 2 - 1;
+                    MoveTrolleyToPosition(new Vector3(initTrolleyPos.x + xpos, initTrolleyPos.y, initTrolleyPos.z));
                 }
+
+            } else {
+               
                 // if no input and the tracks don't diverge, stay on the current track
             }
             //TODO: Move the trolley apart
