@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 
     public float moveRate;
+    public float speedIncrease = 0.15f;
     public int bufferCount;
     public int score = 1000;
     public int personValue = 25;
     public Text scoreText;
     public GameObject trolley;
+    public Animator fade;
 
     private bool gameOver = false;
     private Vector3 initTrolleyPos;
@@ -46,6 +49,12 @@ public class GameController : MonoBehaviour {
 
     private void GameOver() {
         gameOver = true;
+        fade.SetTrigger("FadeScreen");
+        StartCoroutine(WaitAndLoad());
+    }
+    IEnumerator WaitAndLoad() {
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadScene("Menu");
     }
     
     private void SwitchTracks() {
