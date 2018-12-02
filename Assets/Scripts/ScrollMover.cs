@@ -5,13 +5,18 @@ using UnityEngine;
 public class ScrollMover : MonoBehaviour {
 
     private Rigidbody rb;
-
+    private float currVel;
 	// Use this for initialization
 	void Start () {
         rb = GetComponent<Rigidbody>();
+        currVel = GameController.instance.moveRate;
+        rb.velocity = new Vector3(0, 0, -1f * currVel);
     }
-    private void FixedUpdate() {
+    private void Update() {
         //check every frame because GameController might speed up the game!
-        rb.velocity = new Vector3(0, 0, -1f * GameController.instance.moveRate);
+        if (currVel < GameController.instance.moveRate) {
+            currVel = GameController.instance.moveRate;
+            rb.velocity = new Vector3(0, 0, -1f * currVel);
+        }
     }
 }

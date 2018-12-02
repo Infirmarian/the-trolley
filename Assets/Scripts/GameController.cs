@@ -1,14 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
     public float moveRate;
     public int bufferCount;
     public int score = 1000;
+    public int personValue = 25;
+    public Text scoreText;
     public GameObject trolley;
 
+    private bool gameOver = false;
     private Vector3 initTrolleyPos;
     public static GameController instance;
     private List<int[]> trackList;
@@ -27,19 +31,23 @@ public class GameController : MonoBehaviour {
     // Use this for initialization
     void Start () {
 		initTrolleyPos = trolley.transform.position;
+        scoreText.text = "Score: " + score.ToString();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (score <= 0) {
+        moveRate += Time.deltaTime * 0.1f;
+        if (score <= 0){
+            scoreText.text = "Score: 0";
             GameOver();
-        }
-	}
-
-    private void GameOver() {
-
+        }else
+            scoreText.text = "Score: " + score.ToString();
     }
 
+    private void GameOver() {
+        gameOver = true;
+    }
+    
     private void SwitchTracks() {
         int[] nextTrack = trackList[currentTrackSpot + 2];
         if(Sum(nextTrack) == 1) {
@@ -53,18 +61,29 @@ public class GameController : MonoBehaviour {
             MoveTrolleyToPosition(new Vector3(initTrolleyPos.x + xpos, initTrolleyPos.y, initTrolleyPos.z));
         } else {
             int x = Mathf.RoundToInt(Input.GetAxis("Horizontal"));
-            if(x == 0) {
+            if(x != 0 && !gameOver) {
+                if(x == -1 && nextTrack[0] == 1) {
+                    MoveTrolleyToPosition(new Vector3(initTrolleyPos.x - 1, initTrolleyPos.y, initTrolleyPos.z));
+                }
+                if(x == 1 && nextTrack[2] == 1) {
+                    MoveTrolleyToPosition(new Vector3(initTrolleyPos.x +1, initTrolleyPos.y, initTrolleyPos.z));
+                }
+                if(x == 1 && nextTrack[1] == 1 && Mathf.RoundToInt(trolley.transform.position.x) == -1) {
+                    MoveTrolleyToPosition(new Vector3(initTrolleyPos.x, initTrolleyPos.y, initTrolleyPos.z));
+
+                }
+                if (x == -1 && nextTrack[1] == 1 && Mathf.RoundToInt(trolley.transform.position.x) == 1) {
+                    MoveTrolleyToPosition(new Vector3(initTrolleyPos.x, initTrolleyPos.y, initTrolleyPos.z));
+                }
+
+            } else {
                 // split tracks
                 if (nextTrack[1] == 0) {
                     int xpos = Random.Range(0, 2) * 2 - 1;
                     MoveTrolleyToPosition(new Vector3(initTrolleyPos.x + xpos, initTrolleyPos.y, initTrolleyPos.z));
                 }
-
-            } else {
-               
                 // if no input and the tracks don't diverge, stay on the current track
             }
-            //TODO: Move the trolley apart
         }
 
     }
@@ -75,12 +94,16 @@ public class GameController : MonoBehaviour {
 
 
 
-    private static int Sum(int[] arr) {
+    public static int Sum(int[] arr) {
         int sum = 0;
         for(int i=0; i<arr.Length; i++) {
             sum += arr[i];
         }
         return sum;
+    }
+
+    public void SmooshPerson() {
+        score -= personValue;
     }
 
     public void SetListIndex(int i) {

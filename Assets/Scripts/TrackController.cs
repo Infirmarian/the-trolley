@@ -5,16 +5,19 @@ using UnityEngine;
 public class TrackController : MonoBehaviour {
 
     public GameObject trackPrefab;
+    public GameObject person;
+    public Transform pool;
 
     private List<int[]> track;
-    private List<GameObject> trackObjects;
+    private List<GameObject> objectPool;
     private int currentIndex;
+    
 	// Use this for initialization
 	void Start () {
         track = new List<int[]>();
-        trackObjects = new List<GameObject>();
+        objectPool = new List<GameObject>();
         int numTracks = 1;
-        int minCount = 10;
+        int minCount = 15;
 
         track.Add(new int[] { 0, 1, 0 });
         GenerateTrack(GameController.instance.bufferCount, minCount);
@@ -74,7 +77,7 @@ public class TrackController : MonoBehaviour {
                     }
                 }
 
-                minCount = 5;
+                minCount = 6;
                 i += 1;
                 track.Add(newPattern);
             } else {
@@ -121,6 +124,40 @@ public class TrackController : MonoBehaviour {
                     newObj.transform.SetParent(this.gameObject.transform);
                 }
             }
+            // switch in the tracks
+            if (track[z][0] == 2 && z + 1 < stop && GameController.Sum(track[z + 1]) == 2) {
+                int len = 0;
+                int pos = z+1;
+                while (pos < track.Count && track[pos][0] != 2) {
+                    len++;
+                    pos++;
+                }
+                int lCount = Random.Range(1, len / 2);
+                int rCount = Random.Range(1, len / 2);
+                Vector3 left;
+                Vector3 right;
+                if (track[z + 1][0] == 1) {
+                    left = new Vector3(-1, 0, z + 2);
+                    if (track[z + 1][1] == 1)
+                        right = new Vector3(0, 0, z + 2);
+                    else
+                        right = new Vector3(1, 0, z + 2);
+                } else {
+                    left = new Vector3(0, 0, z + 2);
+                    right = new Vector3(1, 0, z + 2);
+                }
+                for (int i = 0; i < lCount; i++) {
+                    GameObject temp = Instantiate(person, left, Quaternion.identity);
+                    temp.transform.SetParent(this.transform);
+                    left += new Vector3(0, 0, Random.Range(1f, 2f));
+                }
+                for (int i = 0; i < rCount; i++) {
+                    GameObject temp = Instantiate(person, right, Quaternion.identity);
+                    temp.transform.SetParent(this.transform);
+                    right += new Vector3(0, 0, Random.Range(1f, 2f));
+                }
+            }
+
         }
     }
 
