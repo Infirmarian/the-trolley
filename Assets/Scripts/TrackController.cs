@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class TrackController : MonoBehaviour {
 
-    public GameObject trackPrefab;
+    public GameObject straightTrack;
+    public GameObject joinCenter;
+    public GameObject joinLeft;
+    public GameObject joinRight;
     public GameObject person;
     public Transform pool;
 
@@ -120,11 +123,66 @@ public class TrackController : MonoBehaviour {
         for (; z < stop; z++) {
             for (int k = 0; k < track[z].Length; k++) {
                 if (track[z][k] == 1) {
-                    GameObject newObj = Instantiate(trackPrefab, new Vector3(k - 1, 0.05f, z), Quaternion.identity);
+                    GameObject newObj = Instantiate(straightTrack, new Vector3(k - 1, 0.05f, z), Quaternion.identity);
                     newObj.transform.SetParent(this.gameObject.transform);
                 }
             }
-            // switch in the tracks
+            // switch, need to instantiate different tracks
+            if(track[z][0] == 2) {
+                if(track[z-1][0] == 1 && track[z-1][2] == 1) {
+                    GameObject newObj = Instantiate(joinCenter, new Vector3(0, 0.05f, z), Quaternion.identity);
+                    newObj.transform.SetParent(this.gameObject.transform);
+
+                }
+                if(track[z+1][0]==1 && track[z+1][2] == 1) {
+                    GameObject newObj = Instantiate(joinCenter, new Vector3(0, 0.05f, z), Quaternion.Euler(0, 180, 0));
+                    newObj.transform.SetParent(this.gameObject.transform);
+                }
+                
+                if(track[z+1][0]==1 && track[z - 1][0] == 1 && track[z-1][1] ==1) {
+                    GameObject newObj = Instantiate(joinLeft, new Vector3(-1, 0.05f, z), Quaternion.identity);  
+                    newObj.transform.SetParent(this.gameObject.transform);
+
+                }
+                if (track[z+1][1] == 1 && track[z-1][1] == 1 && track[z-1][2] == 1) {
+                    GameObject newObj = Instantiate(joinLeft, new Vector3(0,0.05f, z), Quaternion.identity);
+                    newObj.transform.SetParent(this.gameObject.transform);
+
+                }
+                if(track[z+1][0] ==1 && track[z+1][1] ==1 && track[z-1][1] == 1) {
+                    GameObject newObj = Instantiate(joinLeft, new Vector3(0, 0.05f, z), Quaternion.Euler(0,180,0));
+                    newObj.transform.SetParent(this.gameObject.transform);
+                }
+                if (track[z + 1][1] == 1 && track[z +1 ][2] == 1 && track[z - 1][2] == 1) {
+                    GameObject newObj = Instantiate(joinLeft, new Vector3(1, 0.05f, z), Quaternion.Euler(0, 180, 0));
+                    newObj.transform.SetParent(this.gameObject.transform);
+                }
+
+                // right joins
+                if (track[z + 1][1] == 1 && track[z - 1][0] == 1 && track[z - 1][1] == 1) {
+                    GameObject newObj = Instantiate(joinRight, new Vector3(0, 0.05f, z), Quaternion.identity);
+                    newObj.transform.SetParent(this.gameObject.transform);
+
+                }
+                if (track[z + 1][2] == 1 && track[z - 1][1] == 1 && track[z - 1][2] == 1) {
+                    GameObject newObj = Instantiate(joinRight, new Vector3(1, 0.05f, z), Quaternion.identity);
+                    newObj.transform.SetParent(this.gameObject.transform);
+
+                }
+                if (track[z + 1][0] == 1 && track[z + 1][1] == 1 && track[z - 1][0] == 1) {
+                    GameObject newObj = Instantiate(joinRight, new Vector3(-1, 0.05f, z), Quaternion.Euler(0, 180, 0));
+                    newObj.transform.SetParent(this.gameObject.transform);
+                }
+                if (track[z + 1][1] == 1 && track[z + 1][2] == 1 && track[z - 1][1] == 1) {
+                    GameObject newObj = Instantiate(joinRight, new Vector3(0, 0.05f, z), Quaternion.Euler(0, 180, 0));
+                    newObj.transform.SetParent(this.gameObject.transform);
+                }
+
+
+
+
+            }
+            // Spawn enemies at the switch in the tracks
             if (track[z][0] == 2 && z + 1 < stop && GameController.Sum(track[z + 1]) == 2) {
                 int len = 0;
                 int pos = z+1;
@@ -137,24 +195,34 @@ public class TrackController : MonoBehaviour {
                 Vector3 left;
                 Vector3 right;
                 if (track[z + 1][0] == 1) {
-                    left = new Vector3(-1, 0, z + 2);
+                    left = new Vector3(-1, .4f, z + 2);
                     if (track[z + 1][1] == 1)
-                        right = new Vector3(0, 0, z + 2);
+                        right = new Vector3(0, .4f, z + 2);
                     else
-                        right = new Vector3(1, 0, z + 2);
+                        right = new Vector3(1, .4f, z + 2);
                 } else {
-                    left = new Vector3(0, 0, z + 2);
-                    right = new Vector3(1, 0, z + 2);
+                    left = new Vector3(0, .4f, z + 2); 
+                    right = new Vector3(1, .4f, z + 2);
                 }
+                Quaternion rot = Quaternion.identity;
+
                 for (int i = 0; i < lCount; i++) {
-                    GameObject temp = Instantiate(person, left, Quaternion.identity);
+                    if (Random.Range(0, 2) == 0)
+                        rot = Quaternion.identity;
+                    else
+                        rot = Quaternion.Euler(0, 180, 0);
+                    GameObject temp = Instantiate(person, left, rot);
                     temp.transform.SetParent(this.transform);
-                    left += new Vector3(0, 0, Random.Range(1f, 2f));
+                    left += new Vector3(0, 0, Random.Range(1f, 3f));
                 }
                 for (int i = 0; i < rCount; i++) {
-                    GameObject temp = Instantiate(person, right, Quaternion.identity);
+                    if (Random.Range(0, 2) == 0)
+                        rot = Quaternion.identity;
+                    else
+                        rot = Quaternion.Euler(0, 180, 0);
+                    GameObject temp = Instantiate(person, right, rot);
                     temp.transform.SetParent(this.transform);
-                    right += new Vector3(0, 0, Random.Range(1f, 2f));
+                    right += new Vector3(0, 0, Random.Range(1f, 3f));
                 }
             }
 

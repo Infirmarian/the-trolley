@@ -98,6 +98,17 @@ public class GameController : MonoBehaviour {
     }
     //TODO: animate this to make it smoother
     private void MoveTrolleyToPosition(Vector3 pos) {
+        StartCoroutine(AnimateTrolley(pos));
+    }
+
+    IEnumerator AnimateTrolley(Vector3 pos) {
+        float time = 1 / moveRate;
+        Vector3 velocity = Vector3.zero;
+        while (Mathf.Abs(trolley.transform.position.x - pos.x) > 0.01) {
+            yield return new WaitForEndOfFrame();
+            trolley.transform.position = Vector3.SmoothDamp(trolley.transform.position, pos, ref velocity, time);
+        }
+
         trolley.transform.position = pos;
     }
 
