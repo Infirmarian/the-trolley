@@ -80,7 +80,7 @@ public class TrackController : MonoBehaviour {
                     }
                 }
 
-                minCount = 6;
+                minCount = GameController.instance.trackSegmentation;
                 i += 1;
                 track.Add(newPattern);
             } else {
@@ -190,8 +190,8 @@ public class TrackController : MonoBehaviour {
                     len++;
                     pos++;
                 }
-                int lCount = Random.Range(1, len / 2);
-                int rCount = Random.Range(1, len / 2);
+                int lCount = Random.Range(len/4+1, len / 2);
+                int rCount = Mathf.Clamp(len / 2 - lCount, Random.Range(1, 3), len / 2 + 1);
                 Vector3 left;
                 Vector3 right;
                 if (track[z + 1][0] == 1) {

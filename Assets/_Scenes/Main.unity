@@ -1711,16 +1711,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveRate: 2
-  speedIncrease: 0.33
-  bufferCount: 60
-  score: 1000
-  personValue: 25
+  speedIncrease: 1.33
+  bufferCount: 70
+  score: 666
+  personValue: 9
   scoreText: {fileID: 997781396}
   trolley: {fileID: 999469326}
   fade: {fileID: 1071118959}
   finalScoreText: {fileID: 1901024623}
   menu: {fileID: 2034192032}
   restart: {fileID: 377735552}
+  trackSegmentation: 3
 --- !u!4 &473780027
 Transform:
   m_ObjectHideFlags: 0
@@ -4588,6 +4589,72 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4914125034587762, guid: 01bf5b4dd933e12458df703cdd0a29d8,
     type: 2}
   m_PrefabInternal: {fileID: 1316607742}
+--- !u!1 &1318918865
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1318918867}
+  - component: {fileID: 1318918866}
+  m_Layer: 0
+  m_Name: Directional Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!108 &1318918866
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1318918865}
+  m_Enabled: 1
+  serializedVersion: 8
+  m_Type: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 0
+  m_Range: 10
+  m_SpotAngle: 30
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 0
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+--- !u!4 &1318918867
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1318918865}
+  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalPosition: {x: 1.4889841, y: 1.4460396, z: -1.2257352}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1001 &1357852615
 Prefab:
   m_ObjectHideFlags: 0
@@ -5489,8 +5556,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 64}
-  m_SizeDelta: {x: 257.63, y: 60}
+  m_AnchoredPosition: {x: 0, y: 90}
+  m_SizeDelta: {x: 491.1, y: 68.75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1901024623
 MonoBehaviour:
@@ -5513,18 +5580,18 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 08f5f79f4c85a884095f5af79cf17fe8, type: 3}
-    m_FontSize: 76
+    m_FontSize: 75
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 1
+    m_MinSize: 0
     m_MaxSize: 300
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 1
+    m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: FinalScore
+  m_Text: FINALSCORE
 --- !u!222 &1901024624
 CanvasRenderer:
   m_ObjectHideFlags: 0

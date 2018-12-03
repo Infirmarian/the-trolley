@@ -10,7 +10,7 @@ public class AudioSpeed : MonoBehaviour {
     }
     private void Update() {
         if(!GameController.instance.IsGameOver())
-        audio.pitch = Mathf.Clamp(1 + (GameController.instance.moveRate / 30f), 1, 3);
+        audio.pitch = Mathf.Clamp(1 + (GameController.instance.moveRate / 25f), 1, 3);
         else if (!fading){
             StartCoroutine(Fade(5));
         }

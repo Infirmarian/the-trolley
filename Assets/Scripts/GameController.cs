@@ -16,6 +16,8 @@ public class GameController : MonoBehaviour {
     public Animator fade;
     public Text finalScoreText;
     public GameObject menu, restart;
+    [Range(3, 7)]
+    public int trackSegmentation;
 
     private float finalScore;
     private bool gameOver = false;
@@ -24,6 +26,7 @@ public class GameController : MonoBehaviour {
     private List<int[]> trackList;
     private int currentTrackSpot;
     private int trackCount = 0;
+    private bool switched = false;
     //Singleton protection for GameController
     private void Awake() {
         if(GameController.instance == null) {
@@ -66,14 +69,21 @@ public class GameController : MonoBehaviour {
         fade.SetTrigger("FadeScreen");
         menu.SetActive(true);
         restart.SetActive(true);
-        finalScoreText.text = Mathf.RoundToInt(finalScore).ToString();
+        if (!switched) {
+            finalScoreText.text = "You win. The trolley must decide for itself";
+            finalScoreText.fontSize = 40;
+        } else {
+            finalScoreText.text = Mathf.RoundToInt(finalScore).ToString();
+        }
         StartCoroutine(EndAfterSeconds(5f));
     }
     IEnumerator EndAfterSeconds(float seconds) {
         yield return new WaitForSeconds(seconds);
         moveRate = 0f;
     }
-
+//TODO: Bugfix
+// For some reason, the trolley will seemingly randomly switch tracks or fail to switch tracks,
+// resulting in it getting off the rails
     private void SwitchTracks() {
         int[] nextTrack = trackList[currentTrackSpot + 2];
         if(Sum(nextTrack) == 1) {
@@ -88,6 +98,7 @@ public class GameController : MonoBehaviour {
         } else {
             int x = Mathf.RoundToInt(Input.GetAxis("Horizontal"));
             if(x != 0 && !gameOver) {
+                switched = true;
                 if(x == -1 && nextTrack[0] == 1) {
                     MoveTrolleyToPosition(new Vector3(initTrolleyPos.x - 1, initTrolleyPos.y, initTrolleyPos.z));
                 }
@@ -105,7 +116,7 @@ public class GameController : MonoBehaviour {
             } else {
                 // split tracks
                 if (nextTrack[1] == 0) {
-                    int xpos = Random.Range(0, 2) * 2 - 1;
+                    int xpos = (Random.Range(0, 2) * 2) - 1;
                     MoveTrolleyToPosition(new Vector3(initTrolleyPos.x + xpos, initTrolleyPos.y, initTrolleyPos.z));
                 }
                 // if no input and the tracks don't diverge, stay on the current track
@@ -113,7 +124,7 @@ public class GameController : MonoBehaviour {
         }
 
     }
-    //TODO: animate this to make it smoother
+
     private void MoveTrolleyToPosition(Vector3 pos) {
         StartCoroutine(AnimateTrolley(pos));
     }
@@ -144,6 +155,9 @@ public class GameController : MonoBehaviour {
     }
 
     public void SetListIndex(int i) {
+        if (i - 1 > currentTrackSpot) {
+            Debug.Log("ERROR, SKIPPED AN INDEX SOMEHOW");
+        }
         // encountering a new set of track
         if(i != currentTrackSpot) {
             // transition time bois!
