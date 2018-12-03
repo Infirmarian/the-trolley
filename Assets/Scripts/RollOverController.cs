@@ -9,7 +9,8 @@ public class RollOverController : MonoBehaviour {
             GameController.instance.SmooshPerson();
             // add stuff here!
             Destroy(other.gameObject);
-            anim.SetTrigger("flash");
+            if(! GameController.instance.IsGameOver())
+                anim.SetTrigger("flash");
         }
     }
 }

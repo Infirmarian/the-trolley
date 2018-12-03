@@ -14,7 +14,10 @@ public class GameController : MonoBehaviour {
     public Text scoreText;
     public GameObject trolley;
     public Animator fade;
+    public Text finalScoreText;
+    public GameObject menu, restart;
 
+    private float finalScore;
     private bool gameOver = false;
     private Vector3 initTrolleyPos;
     public static GameController instance;
@@ -35,28 +38,42 @@ public class GameController : MonoBehaviour {
     void Start () {
 		initTrolleyPos = trolley.transform.position;
         scoreText.text = "Score: " + score.ToString();
+        finalScoreText.text = "";
+        menu.SetActive(false);
+        restart.SetActive(false);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        moveRate += Time.deltaTime * 0.1f;
+        if (!gameOver) {
+            moveRate += Time.deltaTime * 0.1f;
+            finalScore += (Time.deltaTime * moveRate);
+        }
         if (score <= 0){
-            scoreText.text = "Score: 0";
-            GameOver();
+            if (!gameOver) {
+                scoreText.text = "";
+                GameOver();
+            }
         }else
             scoreText.text = "Score: " + score.ToString();
+    }
+    public bool IsGameOver() {
+        return gameOver;
     }
 
     private void GameOver() {
         gameOver = true;
         fade.SetTrigger("FadeScreen");
-        StartCoroutine(WaitAndLoad());
+        menu.SetActive(true);
+        restart.SetActive(true);
+        finalScoreText.text = Mathf.RoundToInt(finalScore).ToString();
+        StartCoroutine(EndAfterSeconds(5f));
     }
-    IEnumerator WaitAndLoad() {
-        yield return new WaitForSeconds(5f);
-        SceneManager.LoadScene("Menu");
+    IEnumerator EndAfterSeconds(float seconds) {
+        yield return new WaitForSeconds(seconds);
+        moveRate = 0f;
     }
-    
+
     private void SwitchTracks() {
         int[] nextTrack = trackList[currentTrackSpot + 2];
         if(Sum(nextTrack) == 1) {

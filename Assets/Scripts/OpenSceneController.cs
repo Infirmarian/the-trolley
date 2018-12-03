@@ -18,7 +18,7 @@ public class OpenSceneController : MonoBehaviour {
         mat.SetColor("_EmissionColor", Color.black);
 
         lightIntensity = directionalLight.intensity;
-        Debug.Log(Time.time);
+        turnOnLight += Time.time;
     }
     // Update is called once per frame
     void Update () {
